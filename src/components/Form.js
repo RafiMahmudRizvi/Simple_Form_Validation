@@ -10,20 +10,69 @@ const Form = () => {
     });
 
     const [registration, setRegistration] = useState('')
-
+    const [isEmpty, setIsEmpty] = useState({
+        fname: false,
+        lname: false,
+        email: false
+    })
 
 
     function handelClick(e){
         e.preventDefault()
 
-      if (data.email.match(/\S+@\S+\.\S+/)) {
-          if(data.fname.length>=3 && data.lname.length>=3){
+      if (data.email.match(/\S+@\S+\.\S+/) && data.fname.length>=3 && data.lname.length>=3) {
+      
               setRegistration("valid")
-          }else{
-            setRegistration("invalid")
-
-          }
-      } 
+          
+      }else{
+          setRegistration("invalid")
+      }
+      
+      if(data.fname.length<= 3){
+         setIsEmpty((p)=>{
+            return( {
+                 ...p,
+                 fname : true
+             })
+         })
+      }else{
+        setIsEmpty((p)=>{
+            return( {
+                 ...p,
+                 fname : false
+             })
+         })   
+      }
+      if(data.lname.length<= 3){
+        setIsEmpty((p)=>{
+           return( {
+                ...p,
+                lname : true
+            })
+        })
+     }else{
+       setIsEmpty((p)=>{
+           return( {
+                ...p,
+                lname : false
+            })
+        })   
+     }
+     if(!data.email.match(/\S+@\S+\.\S+/) || data.email.length<5){
+        setIsEmpty((p)=>{
+            return( {
+                 ...p,
+                 email: true
+             })
+         })  
+     }else{
+        setIsEmpty((p)=>{
+            return( {
+                 ...p,
+                 email: false
+             })
+         }) 
+     }
         
     }
 
@@ -73,23 +122,37 @@ const Form = () => {
         {registration === "valid" && <div className='valid'> Successfuly! Your registration is completed.</div>}
         {registration === "invalid" && <div className='invalid'> Sorry! Your registration is <b>not</b> completed.</div>}
         <form >
-            <input type="text" 
-            placeholder='First Name' 
-            name='fname' 
-            onChange={handelChange}
-            />
-            <input type="text" 
-            placeholder='Last Name' 
-            name='lname' 
-            onChange={handelChange}
-              
-            />
-            <input type="email" 
-            placeholder='Email' 
-            name='email' 
-            onChange={handelChange}
-              
-            />
+            <div className="input">
+                <input value={data.fname}
+                type="text" 
+                placeholder='First Name' 
+                name='fname' 
+                onChange={handelChange}
+                />
+                {isEmpty.fname && <span>Invalid First Name</span>}
+            </div>
+
+            <div className="input">
+                <input value={data.lname}      
+                type="text" 
+                placeholder='Last Name' 
+                name='lname' 
+                onChange={handelChange}
+                
+                />
+                {isEmpty.lname && <span>Invalid Last Name</span>}
+            </div>
+
+            <div className="input">
+                <input value={data.email}
+                type="email" 
+                placeholder='Email' 
+                name='email' 
+                onChange={handelChange}
+                
+                />   
+                {isEmpty.email && <span>Invalid Email Address</span>}
+            </div>
 
             <button type='submit' onClick={handelClick}> Register </button>
          </form>
